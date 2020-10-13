@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
+    public function exam()
+    {
+        return $this->belongsTo('App\Models\Exam');
+    }
+
     public static function save_answers($request)
     {
         $answer = new Answer();

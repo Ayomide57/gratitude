@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Exam extends Model
 {
+
+    public function answers()
+    {
+      return $this->hasMany('App\Models\Answer', 'exam_id');
+    }
     public static function save_exam($request)
     {
         $exam = new Exam();
@@ -23,8 +28,6 @@ class Exam extends Model
     }
 
     public static function getAllExamAndAnswers(){
-      return Exam::join('answers', 'exams.id', '=', 'answers.exam_id')
-      ->select('exams.*', 'answers.*')
-      ->get();
-  }
+      return Exam::with('answers')->get();
+    }
 }

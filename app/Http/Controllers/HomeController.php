@@ -107,8 +107,8 @@ class HomeController extends Controller
     public function getAllQuestions()
     {
         $exams = Exam::getAllExamAndAnswers();
-        dd($exams);
-        //return view('add-answer',['exams' => $exams]);
+        //dd($exams);
+        return view('view-all-exam',['exams' => $exams]);
     }
 
     public function getAllCategoryPage()

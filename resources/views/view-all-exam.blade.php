@@ -42,7 +42,18 @@
                             </ul>
                         </div>
                         <div class="panel-body">
-                               
+                            <div class="col-lg-12">
+                            <?php $i = 1; ?>
+                               @foreach($exams as $exam)
+                                    <div class="col-lg-3">
+                                            <h4>{{ $i }}. {{ $exam->question }}</h4><br>
+                                            @foreach($exam->answers as $ans)
+                                            <li>{{ $ans->answer }}</li>
+                                            @endforeach
+                                    </div>
+                                    <?php $i++ ?>
+                               @endforeach
+                            </div>
                         </div>
                     </section>
                 </div>
