@@ -33,22 +33,15 @@ class HomeController extends Controller
         return view('dashboard');
     }
 
-    public function getCatergoyPage()
+    public function getCategoryPage()
     {
-        return view('add-category');
+        return view('category.add-category');
     }
 
-    public function getExamPage()
+    public function getEditCategoryPage($id)
     {
-
-        $category = Category::getAllCategory();
-        return view('add-exam', ['categories' => $category]);
-    }
-
-    public function getAnswerPage()
-    {
-        $exams = Exam::getAllExam();
-        return view('add-answer',['exams' => $exams]);
+        $category = Category::getSingleCategory($id);
+        return view('category.edit-category',['category' => $category]);
     }
 
     public function saveCategory(Request $request)
@@ -66,6 +59,53 @@ class HomeController extends Controller
         }
         Session::flash('categoryfailed', 'Category was not saved');
         return redirect()->back();
+    }
+
+    public function updateCategory(Request $request,$id)
+    {
+        $this->validate($request,[
+            'name' => 'required',
+            ]);
+    
+            $result = Category::updateCategory($request->all(),$id); 
+    
+            if($result){
+    
+            Session::flash('categorysuccess', 'Category have been updated');
+            return redirect()->back();
+            }
+            Session::flash('categoryfailed', 'Category update failed');
+            return redirect()->back();
+    }
+
+    public function getAllCategoryPage()
+    {
+        $category = Category::getAllCategory();
+        return view('category.view-all-category', ['categories' => $category]);
+    }
+
+    public function deleteCategory($id)
+    {
+        $result = Category::deleteSingleCategory($id);
+        
+        if($result){
+
+            Session::flash('categorydelsuccess', 'Category has bdeen successfully deleted');
+            return redirect()->back();
+        }
+
+        Session::flash('categorydelfailed', 'Failed to delete Category');
+        return redirect()->back();
+    }
+
+
+    //Exam
+
+    public function getExamPage()
+    {
+
+        $category = Category::getAllCategory();
+        return view('Question.add-exam', ['categories' => $category]);
     }
 
     public function saveExams(Request $request)
@@ -86,6 +126,64 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
+    public function getEditQuestionPage($id)
+    {
+        $category = Category::getAllCategory();
+        $question = Exam::getSingleQuestion($id);
+        return view('Question.edit-exam', [
+            'categories' => $category,
+            'question' => $question
+            ]);
+    }
+
+    public function updateQuestion(Request $request,$id)
+    {
+        $this->validate($request,[
+        'cat_id' => 'required',
+        'question' => 'required',
+        ]);
+
+        $result = Exam::updateExam($request->all(),$id); 
+
+        if($result){
+
+        Session::flash('examsuccess', 'Exam have been updated sucessfully');
+        return redirect()->back();
+        }
+        Session::flash('examfailed', 'Exam update failed');
+        return redirect()->back();
+    }
+
+    public function getAllQuestions()
+    {
+        $exams = Exam::getAllExamAndAnswers();
+        //dd($exams);
+        return view('Question.view-all-exam',['exams' => $exams]);
+    }
+
+    public function deleteQuestion($id)
+    {
+        $result = Exam::deleteQuestion($id);
+        $result = Answer::deleteAnswers($id);
+
+        if($result){
+
+            Session::flash('examdelsuccess', 'Question have been successfully deleted');
+            return redirect()->back();
+        }
+
+        Session::flash('examdelfailed', 'Failed to delete Question');
+        return redirect()->back();
+    }
+
+    // Answer
+
+    public function getAnswerPage()
+    {
+        $exams = Exam::getAllExam();
+        return view('Answer.add-answer',['exams' => $exams]);
+    }
+
     public function saveAnswers(Request $request)
     {
         $this->validate($request,[
@@ -104,18 +202,48 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    public function getAllQuestions()
+    public function getEditAnswerPage($id)
     {
-        $exams = Exam::getAllExamAndAnswers();
-        //dd($exams);
-        return view('view-all-exam',['exams' => $exams]);
+        $exams = Exam::getAllExam();
+        $answer = Answer::getSingleAnswer($id);
+        return view('Answer.edit-answer', ['answer' => $answer, 'exams' => $exams]);
     }
 
-    public function getAllCategoryPage()
+    public function updateAnswer(Request $request)
     {
-        $category = Category::getAllCategory();
-        return view('view-all-category', ['categories' => $category]);
+        $this->validate($request,[
+        'exam_id' => 'required',
+        'answer' => 'required',
+        ]);
+
+        $result = Answer::updateAnswer($request->all(),$id); 
+
+        if($result){
+
+        Session::flash('answersuccess', 'Answer has been saved sucessfully');
+        return redirect()->back();
+        }
+        Session::flash('answerfailed', 'Answer was not saved');
+        return redirect()->back();
     }
 
+    public function deleteAnswer($id)
+    {
+        $result = Answer::deleteSingleAnswers($id);
+
+        if($result){
+
+            Session::flash('answersuccess', 'Answer have been successfully deleted');
+            return redirect()->back();
+        }
+
+        Session::flash('answerfailed', 'Failed to delete Answer');
+        return redirect()->back();
+    }
+
+
+   
+
+    
 
 }

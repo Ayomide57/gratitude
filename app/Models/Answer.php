@@ -21,5 +21,32 @@ class Answer extends Model
         } else{
           return false;
         }
-    }    
+    }   
+
+    public static function updateAnswer($request,$id)
+    {
+      $update = DB::table('exams')
+      ->where('id', $id)
+      ->update([
+        'exam_id' => $request['exam_id'],
+        'answer' => $request['answer'],
+      ]);
+      if($update){
+      return true;
+      } else{
+      return false;
+      }
+    }
+
+    public static function getSingleAnswer($id){
+        return Answer::where('id', $id)->first();
+    }
+    
+    public static function deleteAnswers($id){
+        return Answer::where('exam_id', $id)->delete();
+    }
+
+    public static function deleteSingleAnswers($id){
+        return Answer::where('id', $id)->delete();
+    }
 }

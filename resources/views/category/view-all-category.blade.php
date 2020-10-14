@@ -33,9 +33,9 @@
                     <section class="panel">
                         <header class="panel-heading">
                             <h2><strong>Category</strong></h2>
-                            @if(Session::has('deletesuccess'))
+                            @if(Session::has('categorydelsuccess'))
                                 <div class="alert-box">
-                                    <h4 style="color: green;">{!! Session::get('deletesuccess') !!}</h4>
+                                    <h4 style="color: green;">{!! Session::get('categorydelsuccess') !!}</h4>
                                 </div>
                             @endif
                         </header>
@@ -53,7 +53,6 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Name</th>
-                                        <th width="40%">logo</th>
                                         <th width="30%">Action</th>
                                         <th width="30%">View</th>
                                     </tr>
@@ -63,21 +62,16 @@
                                         <tr>
                                             <td>{{ $cat->id }}</td>
                                             <td valign="middle">{{ $cat->name }}</td>
-                                            <td >
-                                                @if(Storage::disk('local')->has($cat->logo))
-                                                    <img style="width: 100px;height: 100px;"  src="{{ route('fetchImage', ['filename' => $cat->logo]) }}"   alt="page">
-                                                @endif
-                                            </td>
                                             <td>
                                             <span class="tooltip-area">
-                                                <a href="{{ url('ultimatedelete',['id' => $cat->id,'database' => 'company_categories']) }}"
+                                                <a href="{{ url('deletecategory',['id' => $cat->id ]) }}"
                                                    class="btn btn-default btn-sm" title="Delete"><i class="fa fa-trash-o"></i></a>
                                             </span>
                                             </td>
                                             <td>
                                             <span class="tooltip-area">
-                                                <a href="{{ url('viewallsubcat',['id' => $cat->id]) }}"
-                                                   class="" title="Delete"><i class="fa fa-eye-o"></i>view all subcategory</a>
+                                                <a href="{{ url('editcategory',['id' => $cat->id]) }}"
+                                                   class="" title="Edit"><i class="fa fa-eye-o"></i>Edit category</a>
                                             </span>
                                             </td>
                                         </tr>
